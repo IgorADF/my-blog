@@ -1,0 +1,57 @@
+---
+import { render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Tag from "../../components/Tag.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { getPosts, getPostEntry } from "@/lib/posts";
+import { cn } from "@/lib/utils";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const slugs = Array.from(new Set(posts.map((p) => p.slug)));
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getPostEntry(slug);
+
+if (!entry) {
+  throw new Error(`Post not found: ${slug}`);
+}
+
+const { Content } = await render(entry);
+const { title, resume, image, tags } = entry.data;
+---
+
+<Layout>
+  <article class="mx-auto max-w-3xl px-4 py-10">
+    <a
+      href="/"
+      class={cn(buttonVariants({ variant: "ghost", size: "lg" }), "h-8")}
+    >
+      {"<- Back to posts"}
+    </a>
+
+    <header class="mt-6 flex flex-col gap-4">
+      <h1 class="text-4xl font-bold tracking-tight text-foreground">
+        {title}
+      </h1>
+      <p class="text-lg text-muted-foreground">{resume}</p>
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag) => <Tag label={tag} />)}
+      </div>
+    </header>
+
+    <img
+      src={image}
+      alt={title}
+      class="mt-8 aspect-[16/9] w-full rounded-xl object-cover"
+    />
+
+    <div
+      class="prose prose-neutral dark:prose-invert mt-8 max-w-none text-base leading-7 text-foreground"
+    >
+      <Content />
+    </div>
+  </article>
+</Layout>

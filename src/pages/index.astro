@@ -1,12 +1,22 @@
 ---
-import '../styles/global.css';
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { BlogFilter } from '@/components/BlogFilter';
+import { getSite, getPosts } from '@/lib/posts';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const site = await getSite();
+const posts = await getPosts();
+const allTags = Array.from(new Set(posts.flatMap((p) => p.tags))).sort();
 ---
 
 <Layout>
-	<Welcome />
+  <section class="mx-auto flex max-w-3xl flex-col items-center px-4 py-16 text-center">
+    <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+      {site.title}
+    </h1>
+    <p class="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+      {site.description}
+    </p>
+  </section>
+
+  <BlogFilter client:load posts={posts} tags={allTags} />
 </Layout>
