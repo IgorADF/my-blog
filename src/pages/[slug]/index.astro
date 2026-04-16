@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Tag from "../../components/Tag.astro";
+import { PostStats } from "@/components/PostStats";
 import { buttonVariants } from "@/components/ui/button";
 import { getPosts, getPostEntry } from "@/lib/posts";
 import { cn } from "@/lib/utils";
@@ -25,12 +26,20 @@ const { title, resume, image, tags } = entry.data;
 
 <Layout>
   <article class="mx-auto max-w-3xl px-4 py-10">
-    <a
-      href="/"
-      class={cn(buttonVariants({ variant: "ghost", size: "lg" }), "h-8")}
-    >
-      {"<- Back to posts"}
-    </a>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <a
+        href="/"
+        class={cn(
+          buttonVariants({ variant: "ghost", size: "lg" }),
+          "h-8 self-start md:self-auto",
+        )}
+      >
+        {"<- Back to posts"}
+      </a>
+      <div class="self-end md:self-auto">
+        <PostStats client:load slug={slug} />
+      </div>
+    </div>
 
     <header class="mt-6 flex flex-col gap-4">
       <h1 class="text-4xl font-bold tracking-tight text-foreground">
