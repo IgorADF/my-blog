@@ -29,6 +29,12 @@ export function PostStats({ slug }: { slug: string }) {
     }
 
     loadPostCountsFromDb();
+
+    const timeoutId = setTimeout(() => {
+      supabase.rpc("increment_views", { p_slug: slug });
+    }, 10_000);
+
+    return () => clearTimeout(timeoutId);
   }, [slug]);
 
   if (!postCounts) {
