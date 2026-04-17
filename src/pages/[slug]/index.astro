@@ -1,5 +1,6 @@
 ---
 import { render } from "astro:content";
+import { ArrowLeft } from "lucide-react";
 import Layout from "../../layouts/Layout.astro";
 import Tag from "../../components/Tag.astro";
 import { PostStats } from "@/components/PostStats";
@@ -26,22 +27,20 @@ const { title, resume, image, tags } = entry.data;
 
 <Layout>
   <article class="mx-auto max-w-3xl px-4 py-10">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-      <a
-        href="/"
-        class={cn(
-          buttonVariants({ variant: "ghost", size: "lg" }),
-          "h-8 self-start md:self-auto",
-        )}
-      >
-        {"<- Back to posts"}
-      </a>
-      <div class="self-end md:self-auto">
-        <PostStats client:load slug={slug} />
-      </div>
-    </div>
+    <a
+      href="/"
+      class={cn(
+        buttonVariants({ variant: "ghost", size: "lg" }),
+        "h-8 mb-4 p-0 gap-1.5 hover:bg-transparent ml-[-2px]",
+      )}
+    >
+      <ArrowLeft className="size-4" aria-hidden="true" />
+      Back to posts
+    </a>
 
-    <header class="mt-6 flex flex-col gap-4">
+    <PostStats client:load slug={slug} />
+
+    <header class="mt-4 flex flex-col gap-4">
       <h1 class="text-4xl font-bold tracking-tight text-foreground">
         {title}
       </h1>
